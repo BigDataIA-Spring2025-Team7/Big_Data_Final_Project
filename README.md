@@ -15,6 +15,11 @@ Key Objectives:
 * To support mental health journaling and insights.
 * To deliver real-time news, discoveries, and research updates for each condition via web search and summarization.
 
+Live Links:
+airflow: http://206.81.3.50:8082
+fastapi: http://206.81.3.50:8000/docs
+streamlit: http://206.81.3.50:8501
+
 # Resources
 Code labs link: [CodeLabs]https://codelabs-preview.appspot.com/?file_id=1vRDlDe1wL3BszPOn75w2uF0WKvaB9SjdFROvnrNpknE#0
 
