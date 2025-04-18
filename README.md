@@ -15,9 +15,9 @@ Key Objectives:
 
 ## Live Links
 
-- [Apache Airflow](http://64.227.13.196:8082)
-- [FastAPI](http://64.227.13.196:8000/docs)
-- [Streamlit](http://64.227.13.196:8501)
+- [Apache Airflow](http://157.245.251.74:8082)
+- [FastAPI](http://157.245.251.74:8000/docs)
+- [Streamlit](http://157.245.251.74:8501)
 - [CodeLabs](https://codelabs-preview.appspot.com/?file_id=1vRDIDe1wL3BszPOn75w2uF0WKvaB9SjdFROvnrNpknE#0)
 
 
