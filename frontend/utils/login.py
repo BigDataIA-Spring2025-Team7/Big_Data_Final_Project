@@ -23,8 +23,8 @@ def show_login(API_URL):
                     st.session_state.token = token_data["access_token"]
                     st.session_state.username = login_username
                     
-                    # Set default navigation to Dashboard when logging in
-                    st.session_state.nav_selection = "Dashboard"
+                    # Set default navigation to home when logging in
+                    st.session_state.nav_selection = "Home"
                     
                     st.success("Login successful!")
                     st.rerun()
