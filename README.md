@@ -11,17 +11,15 @@ Key Objectives:
 * To build a nutritionist module that provides daily caloric needs and food recommendations based on chronic conditions, with alerting systems for threshold violations through email.
 * To develop a knowledge base powered by vector search Pinecone for patient-facing FAQs from research papers, PDFs, and government health guidelines.
 * To integrate with location-aware web agents for discovering hospitals, clinics, and support groups nearby.
-* To manage medication adherence and provide drug-specific guidance using OpenFDA and RxNorm.
-* To support mental health journaling and insights.
 * To deliver real-time news, discoveries, and research updates for each condition via web search and summarization.
 
-Live Links:
-airflow: http://206.81.3.50:8082
-fastapi: http://206.81.3.50:8000/docs
-streamlit: http://206.81.3.50:8501
+## Live Links
 
-# Resources
-Code labs link: [CodeLabs]https://codelabs-preview.appspot.com/?file_id=1vRDlDe1wL3BszPOn75w2uF0WKvaB9SjdFROvnrNpknE#0
+- [Apache Airflow](http://206.81.3.50:8082)
+- [FastAPI](http://206.81.3.50:8000/docs)
+- [Streamlit](http://206.81.3.50:8501)
+- [CodeLabs](https://codelabs-preview.appspot.com/?file_id=1vRDIDe1wL3BszPOn75w2uF0WKvaB9SjdFROvnrNpknE#0)
+
 
 # Architecture Diagram
 
@@ -32,7 +30,6 @@ Code labs link: [CodeLabs]https://codelabs-preview.appspot.com/?file_id=1vRDlDe1
 * Frontend: Streamlit
 * Backend: FastAPI
 * Agent Framework: LangGraph
-* MCP Server: Model Context Protocol for multi-agent context sharing
 * Orchestration: Apache Airflow
 * Vector Database: Pinecone
 * Storage: Snowflake, AWS S3
@@ -56,7 +53,7 @@ Code labs link: [CodeLabs]https://codelabs-preview.appspot.com/?file_id=1vRDlDe1
   * Build LangGraph agent controller (multi-agent logic)
   * Lead project integration and deployment flow
 
-* AshwinB adamikar:
+* Ashwin Badamikar:
   * Implement FastAPI backend and all route handlers
   * Develop markdown pipeline (S3 → Mistral → Pinecone)
   * Handle OpenAI + Pinecone embeddings
@@ -99,18 +96,6 @@ Despite the abundance of medical knowledge and digital health tools, there is no
 
 The lack of personalization, integration, and proactive support leads to non-adherence, misinformation, and worsening health outcomes.
 
----
-
-## 🎯 OBJECTIVE
-The goal of ChronicCare.AI is to design an intelligent assistant that supports end-to-end chronic disease management, leveraging structured data, unstructured documents, and AI agents.
-
-### Key Objectives
-- Build a nutritionist module that provides daily caloric needs and food recommendations based on chronic conditions, with alerting systems for threshold violations through email
-- Develop a knowledge base powered by vector search Pinecone for patient-facing FAQs from research papers, PDFs, and government health guidelines
-- Integrate with location services for discovering hospitals, clinics, and support groups nearby
-- Deliver real-time news, discoveries, and research updates for each condition via web search and summarization
-
----
 
 ## 🧱 SYSTEM ARCHITECTURE
 ChronicCare.AI is an AI-powered assistant that integrates structured and unstructured data sources, LLM-powered agents, and a modular orchestration architecture using Airflow and LangGraph.
@@ -191,7 +176,7 @@ cd ChronicCareAI
 ### 2. Create and Activate a Virtual Environment
 ```bash
 python -m venv venv
-# On Windows: venv\Scriptsctivate
+# On Windows: venv\Scripts\activate
 # On MAC: source venv/bin/activate  
 ```
 
@@ -251,15 +236,65 @@ streamlit run main.py
 ---
 
 ## 📚 REFERENCES
-*(See full list of tool documentation and healthcare sources in your original reference section — included as-is in this README)*
+## Data Sources
+
+1. **[Edamam API](https://developer.edamam.com/edamam-nutrition-api)**
+   - Provides nutrition data for recipes and ingredients.
+
+2. **[CDC (Centers for Disease Control and Prevention)](https://www.cdc.gov/)**
+   - Provides health data and statistics on various diseases and conditions.
+
+## Tools & Services
+
+### Apache Airflow
+- **[Official Documentation](https://airflow.apache.org/docs/)**
+  - A platform to programmatically author, schedule, and monitor workflows.
+- **[Snowflake Operator for Airflow](https://airflow.apache.org/docs/apache-airflow-providers-snowflake/)**
+  - Allows you to interact with Snowflake from Airflow tasks.
+
+### Snowflake
+- **[Getting Started with Snowflake](https://quickstarts.snowflake.com/guide/getting_started_with_snowflake/index.html#0)**
+  - An introduction to setting up Snowflake data warehouses and working with Snowflake data.
+- **[Python Connector Documentation](https://docs.snowflake.com/en/user-guide/python-connectoN)**
+  - Learn how to use Python to interact with Snowflake databases.
+
+### DBT (Data Build Tool)
+- **[Official Documentation](https://docs.getdbt.com/)**
+  - A powerful tool for transforming raw data into a meaningful form using SQL.
+
+### FastAPI
+- **[Official Documentation](https://fastapi.tiangolo.com/)**
+  - A modern framework for building APIs with Python.
+- **[SQLAlchemy Integration](https://fastapi.tiangolo.com/tutorial/sql-databases/)**
+  - Learn how to connect FastAPI to relational databases using SQLAlchemy.
+
+### AWS S3
+- **[Python SDK (Boto3)](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)**
+  - Amazon Web Services' SDK for Python to interact with S3 and other AWS services.
+
+### Streamlit
+- **[Official Documentation](https://docs.streamlit.io/)**
+  - A tool to easily create beautiful data apps with Python.
+
+### OpenAI API
+- **[Official Documentation](https://platform.openai.com/docs)**
+  - API for integrating OpenAI's GPT models into your applications.
+
+### LangChain
+- **[Official Documentation](https://docs.langchain.com)**
+  - A framework for building applications that leverage large language models (LLMs).
+
+### Google Developers
+- **[Google Maps Platform Documentation](https://developers.google.com/maps/documentation)**
+  - APIs to integrate mapping, location, and geospatial data into your applications.
 
 ---
 
 ## 🧾 DISCLOSURES
 **Contributions**  
-Vemana Anil Kumar - 33%  
-Ashwin Badamikar - 33%  
-Madhura Adadande - 33%
+Vemana Anil Kumar - 33.3%  
+Ashwin Badamikar - 33.3%  
+Madhura Adadande - 33.3%
 
 **AI Usage Disclosure**  
 We used AI tools (ChatGPT, DeepSeek, Claude) to assist with coding, debugging, documentation, and technical explanation. All final implementations and decisions were made by the project team.
