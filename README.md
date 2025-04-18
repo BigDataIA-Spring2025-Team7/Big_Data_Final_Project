@@ -59,7 +59,7 @@ Key Objectives:
   * Handle OpenAI + Pinecone embeddings
   * Build Streamlit pages for Info and Summary
 
-* Madhura Adadhande:
+* Madhura Adadande:
   * Implement Location Agent using Tavily + Google Maps
   * Handle S3 data versioning + Markdown validation
   * Add Email alerting system with user config
