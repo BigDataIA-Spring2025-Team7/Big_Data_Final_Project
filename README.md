@@ -23,6 +23,11 @@ Key Objectives:
 
 # Architecture Diagram
 
+## Airflow Pipeline
+
+![Diagram_Nutrition_RAG_Project](https://github.com/user-attachments/assets/3b989289-f436-4dfd-86e5-d373ce67238d)
+
+
 <img width="1307" alt="image" src="https://github.com/user-attachments/assets/74f4be24-4253-404f-b3f9-7c3f6e678a9d" />
 
 # Tools and Technologies
