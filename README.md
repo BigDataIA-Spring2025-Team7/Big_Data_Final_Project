@@ -28,7 +28,7 @@ Key Objectives:
 ![Diagram_Nutrition_RAG_Project](https://github.com/user-attachments/assets/3b989289-f436-4dfd-86e5-d373ce67238d)
 
 
-<img width="1307" alt="image" src="https://github.com/user-attachments/assets/74f4be24-4253-404f-b3f9-7c3f6e678a9d" />
+![mermaid-diagram-2025-04-18-152843](https://github.com/user-attachments/assets/aa0bb440-ca03-49fe-94df-b6ee15a14d4a)
 
 # Tools and Technologies
 
@@ -48,26 +48,6 @@ Key Objectives:
 
 ![ChatGPT Image Apr 18, 2025, 10_03_02 AM](https://github.com/user-attachments/assets/392b5ec5-c557-4599-acc9-cff15f7e5f3f)
 
-
-
-# Team Roles and Responsibilities
-
-* Vemana Anil Kumar:
-  * Design and develop Airflow DAGs and Configure Snowflake
-  * Work on Nutrition and Drug agents
-  * Build LangGraph agent controller (multi-agent logic)
-  * Lead project integration and deployment flow
-
-* Ashwin Badamikar:
-  * Implement FastAPI backend and all route handlers
-  * Develop markdown pipeline (S3 → Mistral → Pinecone)
-  * Handle OpenAI + Pinecone embeddings
-  * Build Streamlit pages for Info and Summary
-
-* Madhura Adadande:
-  * Implement Location Agent using Tavily + Google Maps
-  * Handle S3 data versioning + Markdown validation
-  * Add Email alerting system with user config
  
 ## 🔍 PROJECT OVERVIEW
 
@@ -156,17 +136,7 @@ ChronicCare.AI is an AI-powered assistant that integrates structured and unstruc
 
 ---
 
-## 🗺️ ARCHITECTURE DIAGRAM
-*(Insert architecture diagram image or link here)*
 
----
-
-## 👣 APPLICATION WALKTHROUGH
-- **Home Page**: Login and registration for new users
-- **Nutrition**: Input meals and view nutrient insights with recommendations
-- **Condition KB**: Ask questions related to chronic conditions based on uploaded documents
-- **Nearby Clinics**: Auto-fetch nearby support centers based on location
-- **Summary Tab**: Get personalized recommendations and health alerts
 
 ---
 
