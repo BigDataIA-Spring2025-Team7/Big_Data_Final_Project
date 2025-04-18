@@ -1,3 +1,5 @@
+# FILE: backend/users.py
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -24,45 +26,101 @@ class PasswordChange(BaseModel):
     current_password: str
     new_password: str
 
+def calculate_bmi(height_cm: float, weight_kg: float):
+    height_m = height_cm / 100
+    bmi = weight_kg / (height_m ** 2)
+    if bmi < 18.5:
+        category = "Underweight"
+    elif 18.5 <= bmi < 25:
+        category = "Normal weight"
+    elif 25 <= bmi < 30:
+        category = "Overweight"
+    else:
+        category = "Obese"
+    return round(bmi, 2), category
+
+def get_activity_factor(activity_level: str) -> float:
+    activity_map = {
+        "Sedentary": 1.2,
+        "Lightly Active": 1.375,
+        "Moderately Active": 1.55,
+        "Very Active": 1.725,
+        "Extra Active": 1.9
+    }
+    return activity_map.get(activity_level, 1.2)
+
+def calculate_tdee(age: int, gender: str, height_cm: float, weight_kg: float, activity_level: str, condition: str):
+    # Mifflin-St Jeor BMR formula
+    if gender.lower() == "male":
+        bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age + 5
+    else:
+        bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age - 161
+
+    activity_factor = get_activity_factor(activity_level)
+    tdee = bmr * activity_factor
+
+    # Adjust based on chronic condition
+    if condition.lower() == "obesity":
+        tdee *= 0.85
+    elif condition.lower() == "type2":
+        tdee *= 0.90
+    elif condition.lower() == "ckd":
+        # Use per kg method
+        tdee = 30 * weight_kg  # Or 35 based on stage, simplified here
+    elif condition.lower() == "polycystic":
+        tdee *= 0.85
+    # Else leave unchanged for Hypertension, Cholesterol, Gluten
+
+    return round(tdee, 2)
+
 @router.post("/signup", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     try:
         logger.debug(f"Attempting to create user: {user.username}")
-        logger.debug(f"User data: chronic_condition={user.chronic_condition}, location={user.location}")
         
-        # Check if user exists
-        db_user = auth.get_user(db, username=user.username)
-        if db_user:
-            logger.warning(f"Username {user.username} already registered")
+        if auth.get_user(db, username=user.username):
             raise HTTPException(status_code=400, detail="Username already registered")
-        
-        # Hash password
-        logger.debug("Hashing password")
+
         hashed_password = auth.get_password_hash(user.password)
         
-        # Create new user
-        logger.debug("Creating new user in database")
+        # Calculate BMI and category
+        bmi, bmi_category = calculate_bmi(user.height, user.weight)
+
+        # Calculate TDEE
+        tdee = calculate_tdee(
+            age=user.age,
+            gender=user.gender,
+            height_cm=user.height,
+            weight_kg=user.weight,
+            activity_level=user.activity_level,
+            condition=user.chronic_condition
+        )
+
         db_user = models.User(
-            username=user.username, 
+            username=user.username,
             password=hashed_password,
             chronic_condition=user.chronic_condition,
-            location=user.location
+            location=user.location,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            email=user.email,
+            age=user.age,
+            gender=user.gender,
+            height=user.height,
+            weight=user.weight,
+            activity_level=user.activity_level,
+            bmi=bmi,
+            bmi_category=bmi_category,
+            tdee=tdee
         )
-        
-        # Add to database
-        logger.debug("Adding user to database")
+
         db.add(db_user)
-        
-        # Commit changes
-        logger.debug("Committing changes to database")
         db.commit()
-        
-        # Refresh to get the id
-        logger.debug("Refreshing user object")
         db.refresh(db_user)
-        
-        logger.info(f"User {user.username} created successfully with id {db_user.id}")
+
+        logger.info(f"User {user.username} created successfully with BMI={bmi} and TDEE={tdee}")
         return db_user
+
     except Exception as e:
         logger.error(f"Error creating user: {str(e)}")
         logger.error(traceback.format_exc())
@@ -77,48 +135,33 @@ async def login_for_access_token(
     db: Session = Depends(get_db)
 ):
     try:
-        logger.debug(f"Login attempt for user: {form_data.username}")
         user = auth.authenticate_user(db, form_data.username, form_data.password)
         if not user:
-            logger.warning(f"Failed login attempt for user: {form_data.username}")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Incorrect username or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        
-        logger.debug("Creating access token")
+
         access_token_expires = timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = auth.create_access_token(
             data={"sub": user.username}, expires_delta=access_token_expires
         )
-        
-        logger.info(f"User {form_data.username} logged in successfully")
+
         return {"access_token": access_token, "token_type": "bearer"}
-    except HTTPException:
-        raise
+
     except Exception as e:
-        logger.error(f"Error during login: {str(e)}")
-        logger.error(traceback.format_exc())
+        logger.error(f"Login error: {str(e)}")
         raise HTTPException(
             status_code=500,
-            detail=f"An error occurred during login: {str(e)}"
+            detail=f"Login failed: {str(e)}"
         )
 
 @router.get("/me", response_model=schemas.User)
 async def read_users_me(
     current_user = Depends(auth.get_current_active_user)
 ):
-    try:
-        logger.debug(f"Getting user info for: {current_user.username}")
-        return current_user
-    except Exception as e:
-        logger.error(f"Error getting user info: {str(e)}")
-        logger.error(traceback.format_exc())
-        raise HTTPException(
-            status_code=500,
-            detail=f"An error occurred while retrieving user info: {str(e)}"
-        )
+    return current_user
 
 @router.post("/change-password")
 async def change_password(
@@ -127,28 +170,14 @@ async def change_password(
     db: Session = Depends(get_db)
 ):
     try:
-        logger.debug(f"Attempting to change password for user: {current_user.username}")
-        
-        # Verify current password
         if not auth.verify_password(password_data.current_password, current_user.password):
-            logger.warning(f"Current password verification failed for user: {current_user.username}")
             raise HTTPException(status_code=400, detail="Current password is incorrect")
-        
-        # Hash new password
-        hashed_password = auth.get_password_hash(password_data.new_password)
-        
-        # Update user password in database
-        current_user.password = hashed_password
+
+        current_user.password = auth.get_password_hash(password_data.new_password)
         db.commit()
-        
-        logger.info(f"Password changed successfully for user: {current_user.username}")
         return {"detail": "Password changed successfully"}
-    except HTTPException:
-        raise
     except Exception as e:
-        logger.error(f"Error changing password: {str(e)}")
-        logger.error(traceback.format_exc())
         raise HTTPException(
             status_code=500,
-            detail=f"An error occurred while changing password: {str(e)}"
+            detail=f"Password update failed: {str(e)}"
         )
